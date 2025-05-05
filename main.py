@@ -19,10 +19,14 @@ def index():
         if not bucket_name:
             return "Error: Variable de entorno GCP_BUCKET_NAME no está definida.", 500
 
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(bucket_name)
-        blob = bucket.blob(file_path)
-        blob.upload_from_filename(file_path)
+
+        try:
+            storage_client = storage.Client()
+            bucket = storage_client.bucket(bucket_name)
+            blob = bucket.blob(file_path)
+            blob.upload_from_filename(file_path)
+        except Exception as e:
+            return f"Error al subir el archivo a Google Cloud Storage: {str(e)}", 500
 
         return f"Frase guardada y subida al bucket {bucket_name}"
 
